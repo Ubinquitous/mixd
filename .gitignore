@@ -1,0 +1,9 @@
+.next
+node_modules
+.npm-cache
+.env.local
+dist
+coverage
+.env
+AuthKey_ASW5CCT26Z.p8
+script.js

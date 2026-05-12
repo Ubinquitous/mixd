@@ -1,0 +1,49 @@
+[
+  {
+    "id": "tsh5e5xi",
+    "inviteCode": "ers14lt5",
+    "name": "노미",
+    "ownerName": "웁삥",
+    "createdAt": "2026-05-12T08:06:26.653Z",
+    "previewTracks": [
+      {
+        "id": "6766167583",
+        "name": "Run it back",
+        "artistName": "키드밀리, Jeffrey White & MASON HOME",
+        "albumName": "MAINSTREAM",
+        "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/bd/13/54/bd135446-d50a-f737-5510-8066e3581d4d/820233180955.jpg/400x400bb.jpg"
+      },
+      {
+        "id": "6766167581",
+        "name": "Honestly",
+        "artistName": "키드밀리, Raf Sandou & Jeffrey White",
+        "albumName": "MAINSTREAM",
+        "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/bd/13/54/bd135446-d50a-f737-5510-8066e3581d4d/820233180955.jpg/400x400bb.jpg"
+      },
+      {
+        "id": "6766167580",
+        "name": "Oh yeah",
+        "artistName": "키드밀리, Raf Sandou, Jeffrey White & MASON HOME",
+        "albumName": "MAINSTREAM",
+        "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/bd/13/54/bd135446-d50a-f737-5510-8066e3581d4d/820233180955.jpg/400x400bb.jpg"
+      },
+      {
+        "id": "6766167476",
+        "name": "Right now",
+        "artistName": "키드밀리, Raf Sandou, Jeffrey White & MASON HOME",
+        "albumName": "MAINSTREAM",
+        "artworkUrl": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/bd/13/54/bd135446-d50a-f737-5510-8066e3581d4d/820233180955.jpg/400x400bb.jpg"
+      }
+    ],
+    "participantCount": 1,
+    "participants": [
+      {
+        "participantId": "af4870b8-a672-4071-9bba-c6b038612a5b",
+        "displayName": "웁삥",
+        "role": "owner",
+        "joinedAt": "2026-05-12T08:06:26.653Z",
+        "trackCount": 100
+      }
+    ]
+  }
+]
