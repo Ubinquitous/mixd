@@ -5,5 +5,4 @@ node_modules
 dist
 coverage
 .env
-AuthKey_ASW5CCT26Z.p8
 script.js
