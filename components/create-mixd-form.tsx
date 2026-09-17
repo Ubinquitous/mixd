@@ -4,21 +4,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-function getParticipantId() {
-  if (typeof window === "undefined") {
-    return "";
-  }
-
-  const existing = window.localStorage.getItem("mixd-participant-id");
-  if (existing) {
-    return existing;
-  }
-
-  const created = crypto.randomUUID();
-  window.localStorage.setItem("mixd-participant-id", created);
-  return created;
-}
-
 async function fetchJson<T>(input: RequestInfo | URL, init?: RequestInit) {
   const response = await fetch(input, init);
   const payload = await response.json().catch(() => null);
@@ -34,22 +19,10 @@ export function CreateMixdForm() {
   const router = useRouter();
   const [musicKitReady, setMusicKitReady] = useState(false);
   const [musicKit, setMusicKit] = useState<MusicKitInstance | null>(null);
-  const [musicUserToken, setMusicUserToken] = useState("");
   const [mixdName, setMixdName] = useState("");
   const [inviteUrl, setInviteUrl] = useState("");
   const [status, setStatus] = useState("로그인 필요");
   const [busy, setBusy] = useState(false);
-  const [ownerName, setOwnerName] = useState("");
-
-  useEffect(() => {
-    void fetchJson<{ session: { displayName?: string } | null }>("/api/session").then(
-      (payload) => {
-        if (payload.session?.displayName) {
-          setOwnerName(payload.session.displayName);
-        }
-      }
-    );
-  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -103,48 +76,25 @@ export function CreateMixdForm() {
     };
   }, []);
 
-  const authorize = async () => {
-    if (!musicKit) {
-      setStatus("로그인 불가");
-      return;
-    }
-
-    setBusy(true);
-    try {
-      const token = await musicKit.authorize();
-      setMusicUserToken(token || "");
-      setStatus(token ? "로그인 완료" : "취소됨");
-    } catch (error) {
-      setStatus(error instanceof Error ? error.message : "로그인 실패");
-    } finally {
-      setBusy(false);
-    }
-  };
-
   const create = async () => {
-    if (!musicUserToken && !musicKit?.musicUserToken) {
-      setStatus("로그인 필요");
-      return;
-    }
-
-    if (!ownerName.trim() || !mixdName.trim()) {
-      setStatus("이름 입력");
+    if (!musicKit || !mixdName.trim()) {
+      setStatus("믹스 이름을 입력해 주세요.");
       return;
     }
 
     setBusy(true);
     try {
-      const participantId = getParticipantId();
+      const token = musicKit.musicUserToken || await musicKit.authorize();
+      const musicUserToken = token || musicKit.musicUserToken || "";
+      if (!musicUserToken) throw new Error("Apple Music 로그인이 필요합니다.");
       const payload = await fetchJson<{ mixd: { inviteCode: string } }>("/api/mixd", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          ownerName: ownerName.trim(),
           name: mixdName.trim(),
-          musicUserToken: musicUserToken || musicKit?.musicUserToken,
-          participantId
+          musicUserToken
         })
       });
 
@@ -179,15 +129,7 @@ export function CreateMixdForm() {
           <Link className="button button-secondary" href="/">
             돌아가기
           </Link>
-          <button
-            className="button button-secondary"
-            type="button"
-            onClick={authorize}
-            disabled={!musicKitReady || busy}
-          >
-            Apple Music 로그인
-          </button>
-          <button className="button button-primary" type="button" onClick={create} disabled={busy}>
+          <button className="button button-primary" type="button" onClick={create} disabled={!musicKitReady || busy}>
             생성하기
           </button>
         </div>
@@ -199,6 +141,9 @@ export function CreateMixdForm() {
             <strong>초대 링크</strong>
             <p>{inviteUrl}</p>
             <div className="invite-actions">
+              <Link className="button button-secondary" href={`/mixd/${inviteUrl.split("/").pop()}`}>
+                결과 보기
+              </Link>
               <Link className="button button-primary" href="/">
                 홈으로
               </Link>

@@ -3,18 +3,6 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-function getParticipantId() {
-  const key = "mixd-participant-id";
-  const existing = window.localStorage.getItem(key);
-  if (existing) {
-    return existing;
-  }
-
-  const created = crypto.randomUUID();
-  window.localStorage.setItem(key, created);
-  return created;
-}
-
 async function fetchJson<T>(input: RequestInfo | URL, init?: RequestInit) {
   const response = await fetch(input, init);
   const payload = await response.json().catch(() => null);
@@ -31,7 +19,6 @@ export function LoginClient() {
   const searchParams = useSearchParams();
   const [musicKitReady, setMusicKitReady] = useState(false);
   const [musicKit, setMusicKit] = useState<MusicKitInstance | null>(null);
-  const [displayName, setDisplayName] = useState("");
   const [status, setStatus] = useState("로그인 필요");
   const [busy, setBusy] = useState(false);
 
@@ -94,14 +81,13 @@ export function LoginClient() {
       return;
     }
 
-    if (!displayName.trim()) {
-      setStatus("이름 입력");
-      return;
-    }
-
     setBusy(true);
 
     try {
+      // 새 developer token/origin 설정 이후 남아 있는 오래된 Music User Token을 갱신합니다.
+      if (typeof musicKit.unauthorize === "function") {
+        await musicKit.unauthorize();
+      }
       const token = await musicKit.authorize();
 
       if (!token && !musicKit.musicUserToken) {
@@ -114,8 +100,7 @@ export function LoginClient() {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          participantId: getParticipantId(),
-          displayName: displayName.trim()
+          displayName: "사용자"
         })
       });
 
@@ -135,14 +120,7 @@ export function LoginClient() {
         <div className="login-copy">
           <p className="kicker">mixd</p>
           <h1>로그인</h1>
-          <p className="subcopy">이름과 Apple Music 계정을 연결합니다.</p>
-        </div>
-
-        <div className="form-grid">
-          <label className="field">
-            <span>이름</span>
-            <input value={displayName} onChange={(e) => setDisplayName(e.target.value)} />
-          </label>
+          <p className="subcopy">Apple 계정으로 로그인하고 음악 취향을 가져옵니다.</p>
         </div>
 
         <div className="login-actions">
@@ -152,7 +130,7 @@ export function LoginClient() {
             onClick={login}
             disabled={!musicKitReady || busy}
           >
-            Apple Music 로그인
+            Apple 계정으로 계속하기
           </button>
         </div>
 

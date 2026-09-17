@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { clearSession, getSession, setSession } from "@/lib/session";
+import { validateDisplayName } from "@/lib/mixd-utils";
 
 export async function GET() {
   const session = await getSession();
@@ -8,18 +9,9 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
-  const participantId = body?.participantId?.trim();
-  const displayName = body?.displayName?.trim();
-
-  if (!participantId || !displayName) {
-    return NextResponse.json(
-      { error: "Missing required fields." },
-      { status: 400 }
-    );
-  }
-
-  await setSession({ participantId, displayName });
-  return NextResponse.json({ ok: true });
+  const displayName = validateDisplayName(body?.displayName) || "사용자";
+  const session = await setSession({ displayName });
+  return NextResponse.json({ session }, { status: 201 });
 }
 
 export async function DELETE() {

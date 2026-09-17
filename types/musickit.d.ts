@@ -30,6 +30,7 @@ type MusicKitAuthorizeResponse = string | null;
 
 interface MusicKitInstance {
   authorize(): Promise<MusicKitAuthorizeResponse>;
+  unauthorize?(): Promise<unknown>;
   setQueue(payload: { song: string } | { songs: string[] }): Promise<unknown>;
   play(): Promise<void>;
   pause(): Promise<void>;

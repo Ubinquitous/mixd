@@ -332,6 +332,125 @@ button {
   text-decoration: underline;
 }
 
+.score-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  border-bottom: 1px solid var(--border);
+}
+
+.score-card {
+  display: grid;
+  gap: 8px;
+  min-height: 150px;
+  padding: 30px 36px;
+  border-right: 1px solid var(--border);
+  align-content: end;
+}
+
+.score-card:last-child {
+  border-right: 0;
+}
+
+.score-card strong {
+  font-size: clamp(2.2rem, 6vw, 4.6rem);
+  letter-spacing: -0.06em;
+  line-height: 0.95;
+}
+
+.score-label {
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.result-section {
+  padding: 22px;
+  border-bottom: 1px solid var(--border);
+}
+
+.save-playlist {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 0 12px 18px;
+}
+
+.status-inline,
+.empty-copy,
+.waiting-card p {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.result-list {
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--border);
+  list-style: none;
+}
+
+.result-track {
+  display: grid;
+  grid-template-columns: 34px 52px minmax(0, 1fr) minmax(100px, 180px);
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.track-index,
+.shared-by {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.track-artwork {
+  width: 52px;
+  height: 52px;
+  object-fit: cover;
+  display: block;
+}
+
+.track-copy {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.track-copy strong,
+.track-copy span,
+.shared-by {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.track-copy span {
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.waiting-card {
+  padding: 56px 36px;
+}
+
+.waiting-card h2 {
+  margin: 10px 0 8px;
+  letter-spacing: -0.03em;
+}
+
+.waiting-card p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.empty-copy {
+  margin: 0;
+  padding: 22px 12px;
+  border-top: 1px solid var(--border);
+}
+
 @media (max-width: 720px) {
   .apple-page {
     width: min(100% - 20px, 980px);
@@ -352,5 +471,34 @@ button {
 
   .mix-card {
     padding: 10px;
+  }
+
+  .score-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .score-main {
+    grid-column: 1 / -1;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .score-card {
+    min-height: 120px;
+    padding: 24px;
+  }
+
+  .result-track {
+    grid-template-columns: 24px 44px minmax(0, 1fr);
+    gap: 10px;
+    padding-inline: 4px;
+  }
+
+  .track-artwork {
+    width: 44px;
+    height: 44px;
+  }
+
+  .shared-by {
+    display: none;
   }
 }

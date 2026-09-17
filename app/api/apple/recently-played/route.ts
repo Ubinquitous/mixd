@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getRecentlyPlayedTracks } from "@/lib/apple-music";
+import { AppleMusicApiError, getRecentlyPlayedTracks } from "@/lib/apple-music";
+import { getSession } from "@/lib/session";
 
 export async function GET(request: NextRequest) {
+  const session = await getSession();
+  if (!session) return NextResponse.json({ error: "로그인이 필요합니다." }, { status: 401 });
   const userToken = request.headers.get("x-music-user-token")?.trim();
 
   if (!userToken) {
@@ -22,7 +25,7 @@ export async function GET(request: NextRequest) {
             ? error.message
             : "Unable to fetch recently played tracks."
       },
-      { status: 500 }
+      { status: error instanceof AppleMusicApiError && error.status < 500 ? 401 : 502 }
     );
   }
 }

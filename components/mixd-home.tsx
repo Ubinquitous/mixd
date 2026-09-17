@@ -67,6 +67,10 @@ export function MixdHome({
                 <p>{mixd.participantCount}명 참여</p>
               </div>
               <div className="mix-link-row">
+                <Link className="text-link" href={`/mixd/${mixd.inviteCode}`}>
+                  결과 보기
+                </Link>
+                <span aria-hidden="true"> · </span>
                 <Link className="text-link" href={`/invite/${mixd.inviteCode}`}>
                   초대 링크
                 </Link>

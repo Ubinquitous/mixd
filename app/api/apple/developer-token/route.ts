@@ -1,9 +1,19 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createAppleDeveloperToken } from "@/lib/apple-music";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const developerToken = createAppleDeveloperToken();
+    const configuredOrigins = (process.env.APPLE_MUSIC_ORIGINS || "")
+      .split(",")
+      .map((origin) => origin.trim())
+      .filter(Boolean);
+    const requestOrigin = request.nextUrl.origin;
+    const origin = configuredOrigins.length > 0
+      ? (configuredOrigins.includes(requestOrigin) ? requestOrigin : undefined)
+      : (new URL(requestOrigin).hostname === "localhost" || new URL(requestOrigin).hostname === "127.0.0.1"
+        ? requestOrigin
+        : undefined);
+    const developerToken = createAppleDeveloperToken(origin);
 
     return NextResponse.json({
       developerToken,

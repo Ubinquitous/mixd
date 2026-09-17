@@ -4,21 +4,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-function getParticipantId() {
-  if (typeof window === "undefined") {
-    return "";
-  }
-
-  const existing = window.localStorage.getItem("mixd-participant-id");
-  if (existing) {
-    return existing;
-  }
-
-  const created = crypto.randomUUID();
-  window.localStorage.setItem("mixd-participant-id", created);
-  return created;
-}
-
 async function fetchJson<T>(input: RequestInfo | URL, init?: RequestInit) {
   const response = await fetch(input, init);
   const payload = await response.json().catch(() => null);
@@ -123,7 +108,6 @@ export function InviteMixdClient({
 
     setBusy(true);
     try {
-      const participantId = getParticipantId();
       const token = await musicKit.authorize();
       const resolvedToken = token || musicKit.musicUserToken || "";
 
@@ -137,15 +121,13 @@ export function InviteMixdClient({
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          musicUserToken: resolvedToken,
-          participantId,
-          displayName: sessionName
+          musicUserToken: resolvedToken
         })
       });
 
       setJoined(true);
       setStatus("참여 완료");
-      router.push("/");
+      router.push(`/mixd/${inviteCode}`);
       router.refresh();
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "참여 실패");

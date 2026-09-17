@@ -10,11 +10,7 @@ export default async function HomePage() {
     redirect("/login");
   }
 
-  const mixds = (await listMixds()).filter((mixd) =>
-    mixd.participants.some(
-      (participant) => participant.participantId === session.participantId
-    )
-  );
+  const mixds = await listMixds(session.participantId);
 
   return <MixdHome mixds={mixds} session={session} />;
 }
